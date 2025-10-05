@@ -3,6 +3,8 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, recall_score, precision_score
 from sklearn.ensemble import GradientBoostingClassifier
+import matplotlib
+matplotlib.use('Agg') 
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
