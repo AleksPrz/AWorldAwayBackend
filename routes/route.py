@@ -65,7 +65,7 @@ def train():
     PathModels[uuid] = (model_path, scaler_path)
     
     resp = jsonify({'graphics':graphics, 'confusion_matrix': matrix})
-    resp.set_cookie('current_model',uuid)
+    resp.set_cookie('current_model',uuid, samesite='None')
     return resp
 
 @route_bp.route('/train/gbt/csv', methods = ["POST"])
