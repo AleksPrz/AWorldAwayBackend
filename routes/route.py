@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request, Blueprint, make_response, send_file
 from PathModels import PathModels
 import joblib
-import random 
 import pandas as pd
 from services import initializeService
 from ML import ml
@@ -66,7 +65,7 @@ def train():
     resp.set_cookie('current_model',uuid)
     return resp
 
-@route_bp.route('/train/gbt/csv', mrthods = ["POST"])
+@route_bp.route('/train/gbt/csv', methods = ["POST"])
 def trainCSV():
     csv_file = request.files.get('file')  # el nombre del input type=file
     if csv_file:
@@ -107,7 +106,7 @@ def predict():
     return jsonify(results)
 
 @route_bp.route('/predict/batch', methods = ['POST'])
-def predict():
+def predict_batch():
     model_id = request.cookies.get('current_model')
 
     csv_file = request.files.get('file')  # el nombre del input type=file
