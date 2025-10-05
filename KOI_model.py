@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 import joblib
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
@@ -74,9 +75,33 @@ X_train = pd.DataFrame(scaler.transform(X_train), index=X_train.index, columns=X
 X_test = pd.DataFrame(scaler.transform(X_test), index=X_test.index, columns=X_test.columns)
 
 # Dump the scaler
-joblib.dump(scaler, 'models/KOI_model_scaler.pkl')
+joblib.dump(scaler, 'models/KOI_scaler.pkl')
 
 # 4 - Model Training
 
 clf = GradientBoostingClassifier()
 
+clf.fit(X_train, y_train)
+
+# Evaluate model
+prediction = clf.predict(X_test)
+accuracy = accuracy_score(y_test, prediction)
+recall = recall_score(y_test, prediction)
+f1 = f1_score(y_test, prediction)
+matrix = confusion_matrix(y_test, prediction)
+
+key_params = ['learning_rate', 'max_depth', 'min_samples_split', 'n_estimators', 'subsample']
+params = clf.get_params()
+filtered_params = {p: params[p] for p in key_params}
+
+# Guardar en JSON
+with open("models/KOI_best_params.json", "w") as f:
+    json.dump(filtered_params, f, indent=4)
+
+print(f'Accuracy: {accuracy}')
+print(f'Recall: {recall}')
+print(f'F1 Score: {f1}')
+print('Confusion Matrix:')
+print(matrix)
+
+joblib.dump(clf, 'models/KOI.pkl')

@@ -3,6 +3,8 @@ from PathModels import PathModels
 import random 
 import pandas as pd
 from services import initializeService
+import os
+
 
 route_bp = Blueprint("routes", __name__)
 
@@ -10,48 +12,42 @@ route_bp = Blueprint("routes", __name__)
 @route_bp.route('/init')
 def init():
     #Este debe ser el uuid del nuestro modelo
-    header, matriz_values = initializeService.readCSV("datasets/example.csv")
-    resp = jsonify({"message":"cookie created", "headerTest": header, "matriz_values:": matriz_values})
+    header, matriz_values, parameters_default = initializeService.defaults_values("datasets/koi_processed.csv")
+    resp = jsonify({"headerTest": header, "matriz_values:": matriz_values,"parameters_default":parameters_default, "message":"cookie created"})
     resp.set_cookie("current_model","current_model")
     return resp
-
-
-# post en el diccionario global
-@route_bp.route('/global/<string:value>', methods = ['POST'])
-def diccionario():
-    PathModels['current_model'] = request.json['value']
-    return jsonify({'message': 'agregado','diccionario':PathModels})
 
 #reset model
 @route_bp.route('/reset/values')
 def reset_values():
     PathModels.clear()
-    #Cambiar el valor para que apunte al path de KOI_MODEL
-    PathModels['KOI_Model'] = "Reseteaste el diccionario"
+    PathModels['current_model'] = 'models/KOI.pkl'
     return jsonify({'message': 'reset complete'})
 
-#Exportar el modelo HAY QUE CHECARLO
+#Exportar el modelo funcional
 @route_bp.route('/export/<string:uuid>', methods = ['GET'])
 def export_model(uuid):
     path = PathModels[uuid]
-
+    print(path)
     if path is None:
         return jsonify({'message':"Archivo no encontrado"})
+    filename = os.path.basename(path)
     return send_file(
         path,
         as_attachment = True,
-        download_name = uuid + "Model",
+        download_name = filename,
         mimetype = "aplication/octet-stream"
     )   
-    #csv = pd.read_csv(path)
-    #return csv.to_json(orient='records')
 
-@route_bp.route('/train', methods = ['POST'])
-def train():
+@route_bp.route('/train/gbt', methods = ['POST'])
+def train(learning_rate,max_depth,min_samples_split,n_estimators,subsample):
     #algoritmo, parametros,
-    resp = jsonify({})
-    resp.set_cookie('current_model',"ultimo modelo")
-    return 'trained'
+    #LLamada para training
+    uuid = initializeService.generateUUID()
+    path = initializeService.create_new_path(uuid)
+    resp = jsonify({'message': 'model trained'})
+    resp.set_cookie('current_model',uuid)
+    return resp
 
 @route_bp.route('/predict', methods = ['POST'])
 def predict():

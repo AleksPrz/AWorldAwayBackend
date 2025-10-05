@@ -1,3 +1,3 @@
 PathModels = {
-    "current_model":'path',
+    "current_model":'models/KOI.pkl',
 }
