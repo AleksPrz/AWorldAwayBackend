@@ -20,7 +20,7 @@ def init():
                 'metrics_bar': bar}
     header, matriz_values, parameters_default = initializeService.defaults_values("datasets/koi_processed.csv")
     resp = jsonify({"headerTest": header, "matriz_values:": matriz_values,"parameters_default":parameters_default,'graphics':graphics, "message":"cookie created"})
-    resp.set_cookie("current_model","KOI")
+    resp.set_cookie("current_model","KOI", samesite='None')
     return resp
 
 #reset model
@@ -34,14 +34,13 @@ def reset_values():
 @route_bp.route('/export', methods = ['GET'])
 def export_model():
     model_id = request.cookies.get('current_model')
-
-    path = PathModels[model_id]
-    print(path)
-    if path is None:
+    path_model,scaler_path = PathModels[model_id]
+    print(path_model)
+    if path_model is None:
         return jsonify({'message':"Archivo no encontrado"})
-    filename = os.path.basename(path)
+    filename = os.path.basename(path_model)
     return send_file(
-        path,
+        path_model,
         as_attachment = True,
         download_name = filename,
         mimetype = "aplication/octet-stream"
