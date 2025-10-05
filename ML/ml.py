@@ -34,8 +34,8 @@ def train_gbt(
     else:
         scaler = MinMaxScaler()
 
-    X_train = pd.DataFrame(scaler_type.transform(X_train), index=X_train.index, columns=X_train.columns)
-    X_test = pd.DataFrame(scaler_type.transform(X_test), index=X_test.index, columns=X_test.columns)
+    X_train = pd.DataFrame(scaler.transform(X_train), index=X_train.index, columns=X_train.columns)
+    X_test = pd.DataFrame(scaler.transform(X_test), index=X_test.index, columns=X_test.columns)
 
     model = GradientBoostingClassifier(n_estimators=n_estimators, learning_rate=learning_rate, max_depth=max_depth, min_samples_split=min_samples_split)
 
