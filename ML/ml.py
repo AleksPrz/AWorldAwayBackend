@@ -99,6 +99,7 @@ def confusion_matrix_graph(y_test, y_pred):
     
     buffer = BytesIO()
     plt.savefig(buffer, format='jpeg')
+    plt.close()
     buffer.seek(0)
     img_bytes = buffer.read()
     img_base64 = base64.b64encode(img_bytes).decode('utf-8')
@@ -116,6 +117,7 @@ def feature_importance_graph(feature_imp):
     # Convertir a base64
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
+    plt.close()
     buffer.seek(0)
     img_bytes = buffer.read()
     img_base64 = base64.b64encode(img_bytes).decode('utf-8')
@@ -123,7 +125,7 @@ def feature_importance_graph(feature_imp):
     return img_base64
 
 def bar_chart(accuracy, recall,precision,f1):
-    # Tus métricas
+
     metrics = {
         "Accuracy": accuracy,
         "Recall": recall,
@@ -134,23 +136,21 @@ def bar_chart(accuracy, recall,precision,f1):
     names = list(metrics.keys())
     values = list(metrics.values())
 
-    # Crear la figura
+
     plt.figure(figsize=(8,5))
     sns.barplot(x=names, y=values, palette="Blues_r")
     plt.ylim(0, 1)
     plt.ylabel("Score")
     plt.title("Evaluation Metrics of the Model")
 
-    # Mostrar valores encima de las barras
     for i, v in enumerate(values):
         plt.text(i, v + 0.02, f"{v:.2f}", ha='center', fontweight='bold')
 
     plt.tight_layout()
 
-    # Convertir la gráfica a bytes y luego a base64
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
-    plt.close()  # Cerrar la figura para liberar memoria
+    plt.close()  
     buffer.seek(0)
     img_bytes = buffer.read()
     img_base64 = base64.b64encode(img_bytes).decode('utf-8')
