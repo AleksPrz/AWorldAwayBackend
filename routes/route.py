@@ -71,7 +71,7 @@ def trainCSV():
         
         data = request.get_json()
         model,scaler,graphics = ml.train_gbt(df,data['target_column'],data['n_estimators'], data['learning_rate'], data['max_depth'],
-                                            data['min_samples_split'], data['train_size'], 'standard')
+                                            data['min_samples_split'], data['train_size'], data.get('scaler_type'))
         
         uuid = initializeService.generateUUID()
         model_path = initializeService.create_new_path(uuid)
@@ -85,9 +85,8 @@ def trainCSV():
         resp = jsonify(graphics)
         resp.set_cookie('current_model',uuid)
         return resp
+    
     return jsonify({'message': 'File error'})
-
-
 
 
 @route_bp.route('/predict', methods = ['POST'])

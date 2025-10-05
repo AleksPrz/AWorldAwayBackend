@@ -152,3 +152,5 @@ def bar_chart(accuracy, recall,precision,f1):
     buffer.seek(0)
     img_bytes = buffer.read()
     img_base64 = base64.b64encode(img_bytes).decode('utf-8')
+
+    return img_base64
