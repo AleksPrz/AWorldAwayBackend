@@ -49,7 +49,7 @@ def export_model(uuid):
 def train():
     #algoritmo, parametros,
     data = request.get_json()
-    df = pd.read_csv('datasets/koi_processed')
+    df = pd.read_csv('datasets/koi_processed.csv')
     model, scaler, graphics = ml.train_gbt(df,'koi_disposition',data['n_estimators'], data['learning_rate'], data['max_depth'],
                                             data['min_samples_split'], data['train_size'], data.get('scaler_type'))
     
