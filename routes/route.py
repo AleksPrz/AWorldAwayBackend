@@ -50,7 +50,7 @@ def train():
     #algoritmo, parametros,
     data = request.get_json()
     df = pd.read_csv('datasets/koi_processed.csv')
-    model, scaler, graphics = ml.train_gbt(df,'koi_disposition',data['n_estimators'], data['learning_rate'], data['max_depth'],
+    model, scaler, graphics, matrix = ml.train_gbt(df,'koi_disposition',data['n_estimators'], data['learning_rate'], data['max_depth'],
                                             data['min_samples_split'], data['train_size'], data.get('scaler_type'))
     
     uuid = initializeService.generateUUID()
@@ -62,7 +62,7 @@ def train():
 
     PathModels[uuid] = (model_path, scaler_path)
     
-    resp = jsonify(graphics)
+    resp = jsonify({'graphics':graphics, 'confusion_matrix': matrix})
     resp.set_cookie('current_model',uuid)
     return resp
 
@@ -74,7 +74,7 @@ def trainCSV():
         df = pd.read_csv(csv_file)
         
         data = request.get_json()
-        model,scaler,graphics = ml.train_gbt(df,data['target_column'],data['n_estimators'], data['learning_rate'], data['max_depth'],
+        model,scaler,graphics, matrix = ml.train_gbt(df,data['target_column'],data['n_estimators'], data['learning_rate'], data['max_depth'],
                                             data['min_samples_split'], data['train_size'], data.get('scaler_type'))
         
         uuid = initializeService.generateUUID()
@@ -86,7 +86,7 @@ def trainCSV():
 
         PathModels[uuid] = (model_path, scaler_path)
         
-        resp = jsonify(graphics)
+        resp = jsonify({'graphics':graphics, 'confusion_matrix': matrix})
         resp.set_cookie('current_model',uuid)
         return resp
     

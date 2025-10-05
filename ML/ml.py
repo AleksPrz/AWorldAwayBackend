@@ -60,7 +60,7 @@ def train_gbt(
                 'feature_importance': feature_importance,
                 'metrics_bar': bar}
     
-    return model, scaler, graphics
+    return model, scaler, graphics, matrix
 
 
 def predict(X, model, scaler):
