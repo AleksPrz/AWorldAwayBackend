@@ -43,8 +43,22 @@ def export_model():
         path_model,
         as_attachment = True,
         download_name = filename,
-        mimetype = "aplication/octet-stream"
+        mimetype = "application/octet-stream"
     )   
+
+@route_bp.route('/export/<string:key>', methods = ['GET'])
+def export_model_url(key):
+    path_model,scaler_path = PathModels[key]
+    print(path_model)
+    if path_model is None:
+        return jsonify({'message':"Archivo no encontrado"})
+    filename = os.path.basename(path_model)
+    return send_file(
+        path_model,
+        as_attachment = True,
+        download_name = filename,
+        mimetype = "application/octet-stream"
+    )
 
 @route_bp.route('/train/gbt/koi', methods = ['POST'])
 def train():
