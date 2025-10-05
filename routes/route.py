@@ -31,9 +31,11 @@ def reset_values():
     return jsonify({'message': 'reset complete'})
 
 #Exportar el modelo funcional
-@route_bp.route('/export/<string:uuid>', methods = ['GET'])
-def export_model(uuid):
-    path = PathModels[uuid]
+@route_bp.route('/export', methods = ['GET'])
+def export_model():
+    model_id = request.cookies.get('current_model')
+
+    path = PathModels[model_id]
     print(path)
     if path is None:
         return jsonify({'message':"Archivo no encontrado"})
