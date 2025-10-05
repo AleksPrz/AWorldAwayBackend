@@ -20,7 +20,16 @@ def init():
                 'metrics_bar': bar}
     header, matriz_values, parameters_default = initializeService.defaults_values("datasets/koi_processed.csv")
     resp = jsonify({"headerTest": header, "matriz_values:": matriz_values,"parameters_default":parameters_default,'graphics':graphics, "message":"cookie created"})
-    resp.set_cookie("current_model","KOI", samesite='None')
+    # resp.set_cookie("current_model","KOI", samesite='None')
+
+    resp.set_cookie(
+        "current_model",
+        "KOI", 
+        secure=True, 
+        samesite='None',  
+        httponly=False,  
+    )
+
     return resp
 
 #reset model
@@ -78,7 +87,13 @@ def train():
     PathModels[uuid] = (model_path, scaler_path)
     
     resp = jsonify({'graphics':graphics, 'confusion_matrix': matrix})
-    resp.set_cookie('current_model',uuid, samesite='None')
+    resp.set_cookie(
+        'current_model',
+        uuid, 
+        secure=True, 
+        samesite='None',  
+        httponly=False,  
+    )
     return resp
 
 @route_bp.route('/train/gbt/csv', methods = ["POST"])
@@ -102,7 +117,14 @@ def trainCSV():
         PathModels[uuid] = (model_path, scaler_path)
         
         resp = jsonify({'graphics':graphics, 'confusion_matrix': matrix})
-        resp.set_cookie('current_model',uuid)
+        resp.set_cookie(
+            'current_model',
+            uuid, 
+            secure=True, 
+            samesite='None',  
+            httponly=False,  
+        )
+        
         return resp
     
     return jsonify({'message': 'File error'})

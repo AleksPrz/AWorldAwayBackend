@@ -71,7 +71,7 @@ def predict(X, model, scaler):
     probabilities = model.predict_proba(X_scaled)
     positive_probs = probabilities[:, 1]
 
-    results = {'predictions': predictions.toList(), 'probabilities': positive_probs.toList()}
+    results = {'predictions': predictions.tolist(), 'probabilities': positive_probs.tolist()}
     return results
 
     
