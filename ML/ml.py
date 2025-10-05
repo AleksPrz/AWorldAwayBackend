@@ -62,7 +62,7 @@ def train_gbt(
     return model, scaler, graphics
 
 
-def predict_batch_gbt(X, model, scaler):
+def predict(X, model, scaler):
     X_scaled = pd.DataFrame(scaler.transform(X), index=X.index, columns=X.columns)
     predictions = model.predict(X_scaled)
     probabilities = model.predict_proba(X_scaled)

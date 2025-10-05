@@ -96,10 +96,15 @@ def trainCSV():
 @route_bp.route('/predict', methods = ['POST'])
 def predict():
     model_id = request.cookies.get('current_model')
-    df = pd.read_csv(csv_file)
+    data = request.get_json()
 
-    
-    return 'predicted'
+    df = pd.DataFrame(data.get('data'))
+    model_path, scaler_path = PathModels[model_id]
+    model = joblib.load(model_path)
+    scaler = joblib.load(scaler_path)
+    results = ml.predict(df, model, scaler)
+
+    return jsonify(results)
 
 @route_bp.route('/predict/batch', methods = ['POST'])
 def predict():
@@ -114,7 +119,7 @@ def predict():
         model = joblib.load(model_path)
         scaler = joblib.load(scaler_path)
 
-        results = ml.predict_batch_gbt(df, model, scaler)
+        results = ml.predict(df, model, scaler)
 
         return jsonify(results)
     
