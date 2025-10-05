@@ -16,7 +16,7 @@ def defaults_values(path):
 
 def generateUUID():
     uuid_new = uuid.uuid4()
-    return uuid_new
+    return str(uuid_new)
 
 def create_new_path(uuid):
     path = 'models/'+uuid+'.pkl'
