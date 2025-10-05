@@ -13,7 +13,8 @@ route_bp = Blueprint("routes", __name__)
 def init():
     matrix_graph = initializeService.image_to_base64('models/confusion_matrix_KOI.png')
     feature_importance = initializeService.image_to_base64('models/feature_importance_KOI.png')
-    bar = initializeService.image_to_base64('fbar_chart_KOI.png')
+    bar = initializeService.image_to_base64('models/fbar_chart_KOI.png')
+
     graphics = {'confussion_matrix': matrix_graph,
                 'feature_importance': feature_importance,
                 'metrics_bar': bar}
