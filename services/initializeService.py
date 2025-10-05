@@ -17,5 +17,9 @@ def generateUUID():
     return uuid
 
 def create_new_path(uuid):
-    PathModels[uuid] = 'models/'+uuid+'.pkl'
-    return 'path created'
+    path = 'models/'+uuid+'.pkl'
+    return path
+
+def create_new_path_scaler(uuid):
+    path = 'models/'+uuid+'_scaler.pkl'
+    return path
