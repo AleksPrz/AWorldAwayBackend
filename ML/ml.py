@@ -33,6 +33,7 @@ def train_gbt(
         scaler = StandardScaler()
     else:
         scaler = MinMaxScaler()
+    scaler.fit(X_train)
 
     X_train = pd.DataFrame(scaler.transform(X_train), index=X_train.index, columns=X_train.columns)
     X_test = pd.DataFrame(scaler.transform(X_test), index=X_test.index, columns=X_test.columns)
