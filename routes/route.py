@@ -7,15 +7,19 @@ from services import initializeService
 from ML import ml
 import os
 
-
 route_bp = Blueprint("routes", __name__)
 
 #Metodo inicial para el usuario
 @route_bp.route('/init')
 def init():
-    #Este debe ser el uuid del nuestro modelo
+    matrix_graph = initializeService.image_to_base64('models/confusion_matrix_KOI.png')
+    feature_importance = initializeService.image_to_base64('models/feature_importance_KOI.png')
+    bar = initializeService.image_to_base64('fbar_chart_KOI.png')
+    graphics = {'confussion_matrix': matrix_graph,
+                'feature_importance': feature_importance,
+                'metrics_bar': bar}
     header, matriz_values, parameters_default = initializeService.defaults_values("datasets/koi_processed.csv")
-    resp = jsonify({"headerTest": header, "matriz_values:": matriz_values,"parameters_default":parameters_default, "message":"cookie created"})
+    resp = jsonify({"headerTest": header, "matriz_values:": matriz_values,"parameters_default":parameters_default,'graphics':graphics, "message":"cookie created"})
     resp.set_cookie("current_model","KOI")
     return resp
 
@@ -64,10 +68,10 @@ def train():
 
 @route_bp.route('/train/gbt/csv', mrthods = ["POST"])
 def trainCSV():
-    archivo = request.files.get('file')  # el nombre del input type=file
-    if archivo:
+    csv_file = request.files.get('file')  # el nombre del input type=file
+    if csv_file:
         # Convertir CSV a DataFrame de pandas
-        df = pd.read_csv(archivo)
+        df = pd.read_csv(csv_file)
         
         data = request.get_json()
         model,scaler,graphics = ml.train_gbt(df,data['target_column'],data['n_estimators'], data['learning_rate'], data['max_depth'],
@@ -91,13 +95,27 @@ def trainCSV():
 
 @route_bp.route('/predict', methods = ['POST'])
 def predict():
-    #model_path = PathModels[]
+    model_id = request.cookies.get('current_model')
+    df = pd.read_csv(csv_file)
+
+    
     return 'predicted'
 
 @route_bp.route('/predict/batch', methods = ['POST'])
 def predict():
     model_id = request.cookies.get('current_model')
-    model_path, scaler_path = PathModels[model_id]
-    data = request.get_json()
-    #model_path = PathModels[]
-    return 'predicted'
+
+    csv_file = request.files.get('file')  # el nombre del input type=file
+    if csv_file:
+        # Convertir CSV a DataFrame de pandas
+        df = pd.read_csv(csv_file)
+
+        model_path, scaler_path = PathModels[model_id]
+        model = joblib.load(model_path)
+        scaler = joblib.load(scaler_path)
+
+        results = ml.predict_batch_gbt(df, model, scaler)
+
+        return jsonify(results)
+    
+    return jsonify({'message': 'File error'})

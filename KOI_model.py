@@ -11,6 +11,7 @@ import numpy as np
 import base64
 from io import BytesIO
 from sklearn.metrics import confusion_matrix
+import os
 
 """DATA PREPROCESSING"""
 df = pd.read_csv("datasets/koi_cumulative.csv")
@@ -114,12 +115,7 @@ joblib.dump(clf, 'models/KOI.pkl')
 
 # Graphics
 
-matrix = confusion_matrix(y_test, prediction)
-bar = bar_chart(accuracy,recall,precision,f1)
-feature_imp = pd.Series(clf.feature_importances_, index=X_train.columns).sort_values(ascending=False)
-feature_importance = feature_importance_graph(feature_imp)
-
-def confusion_matrix(y_test, y_pred):
+def confusion_matrix_graph(y_test, y_pred):
     cf_matrix = confusion_matrix(y_test, y_pred)
     group_names = ['True Neg','False Pos','False Neg','True Pos']
 
@@ -134,13 +130,21 @@ def confusion_matrix(y_test, y_pred):
     ax = sns.heatmap(cf_matrix, annot=labels, fmt='', cmap='Blues')
 
     #ax.set_title('Confusion Matrix with labels\n\n');
-    ax.set_xlabel('Valores preditos pelo modelo')
-    ax.set_ylabel('Valores reais ')
+    ax.set_xlabel('Values ​​predicted by the model')
+    ax.set_ylabel('Real values')
 
     ## Ticket labels - List must be in alphabetical order
     ax.xaxis.set_ticklabels(['False','True'])
     ax.yaxis.set_ticklabels(['False','True'])
-    
+
+    # Crear la carpeta ML si no existe
+    os.makedirs("models", exist_ok=True)
+
+    # Guardar la gráfica en un archivo dentro de ML
+    plt.savefig("models/confusion_matrix_KOI.png", format="png")
+    plt.close()
+
+
     buffer = BytesIO()
     plt.savefig(buffer, format='jpeg')
     buffer.seek(0)
@@ -156,6 +160,13 @@ def feature_importance_graph(feature_imp):
     plt.ylabel('Features')
     plt.title("Visualizing Important Features")
     plt.tight_layout()
+
+    # Crear la carpeta ML si no existe
+    os.makedirs("models", exist_ok=True)
+
+    # Guardar la gráfica en un archivo dentro de ML
+    plt.savefig("models/feature_importance_KOI.png", format="png")
+    plt.close()
 
     # Convertir a base64
     buffer = BytesIO()
@@ -191,6 +202,14 @@ def bar_chart(accuracy, recall,precision,f1):
 
     plt.tight_layout()
 
+    
+    # Crear la carpeta ML si no existe
+    os.makedirs("models", exist_ok=True)
+
+    # Guardar la gráfica en un archivo dentro de ML
+    plt.savefig("models/fbar_chart_KOI.png", format="png")
+    plt.close()
+
     # Convertir la gráfica a bytes y luego a base64
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
@@ -200,3 +219,8 @@ def bar_chart(accuracy, recall,precision,f1):
     img_base64 = base64.b64encode(img_bytes).decode('utf-8')
 
     return img_base64
+
+matrix = confusion_matrix_graph(y_test, prediction)
+bar = bar_chart(accuracy,recall,precision,f1)
+feature_imp = pd.Series(clf.feature_importances_, index=X_train.columns).sort_values(ascending=False)
+feature_importance = feature_importance_graph(feature_imp)

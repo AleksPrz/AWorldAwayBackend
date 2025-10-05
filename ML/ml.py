@@ -47,18 +47,19 @@ def train_gbt(
     recall = recall_score(y_test, prediction)
     precision = precision_score(y_test, prediction)
     f1 = f1_score(y_test, prediction)
-
+    matrix = confusion_matrix_graph(y_test, prediction)
+    
     #Graphs
-    matrix = confusion_matrix(y_test, prediction)
+    matrix_graph = confusion_matrix_graph(y_test,prediction)
     bar = bar_chart(accuracy,recall,precision,f1)
     feature_imp = pd.Series(model.feature_importances_, index=X_train.columns).sort_values(ascending=False)
     feature_importance = feature_importance_graph(feature_imp)
 
-    graphics = {'confussion_matrix': matrix,
+    graphics = {'confussion_matrix': matrix_graph,
                 'feature_importance': feature_importance,
                 'metrics_bar': bar}
     
-    return model, scaler, matrix, graphics
+    return model, scaler, graphics
 
 
 def predict_batch_gbt(X, model, scaler):
@@ -68,12 +69,12 @@ def predict_batch_gbt(X, model, scaler):
     positive_probs = probabilities[:, 1]
 
     results = {'predictions': predictions, 'probabilities': positive_probs}
-    return probabilities
+    return results
 
     
 
 
-def confusion_matrix(y_test, y_pred):
+def confusion_matrix_graph(y_test, y_pred):
     cf_matrix = confusion_matrix(y_test, y_pred)
     group_names = ['True Neg','False Pos','False Neg','True Pos']
 
@@ -88,8 +89,8 @@ def confusion_matrix(y_test, y_pred):
     ax = sns.heatmap(cf_matrix, annot=labels, fmt='', cmap='Blues')
 
     #ax.set_title('Confusion Matrix with labels\n\n');
-    ax.set_xlabel('Valores preditos pelo modelo')
-    ax.set_ylabel('Valores reais ')
+    ax.set_xlabel('Values ​​predicted by the model')
+    ax.set_ylabel('Real values')
 
     ## Ticket labels - List must be in alphabetical order
     ax.xaxis.set_ticklabels(['False','True'])
