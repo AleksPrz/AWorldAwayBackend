@@ -55,20 +55,6 @@ def export_model():
         mimetype = "application/octet-stream"
     )   
 
-@route_bp.route('/export/<string:key>', methods = ['GET'])
-def export_model_url(key):
-    path_model,scaler_path = PathModels[key]
-    print(path_model)
-    if path_model is None:
-        return jsonify({'message':"Archivo no encontrado"})
-    filename = os.path.basename(path_model)
-    return send_file(
-        path_model,
-        as_attachment = True,
-        download_name = filename,
-        mimetype = "application/octet-stream"
-    )
-
 @route_bp.route('/train/gbt/koi', methods = ['POST'])
 def train():
     #algoritmo, parametros,
@@ -80,7 +66,7 @@ def train():
     uuid = initializeService.generateUUID()
     model_path = initializeService.create_new_path(uuid)
     scaler_path = initializeService.create_new_path_scaler(uuid)
-
+    print(model_path)
     joblib.dump(model, model_path)
     joblib.dump(scaler, scaler_path)
 

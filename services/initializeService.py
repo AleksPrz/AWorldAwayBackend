@@ -1,3 +1,5 @@
+from flask import current_app
+import os
 import base64
 import pandas as pd
 from PathModels import PathModels
@@ -20,11 +22,13 @@ def generateUUID():
 
 def create_new_path(uuid):
     path = 'models/'+uuid+'.pkl'
-    return path
+    abs_path = os.path.join(current_app.root_path, path)
+    return abs_path
 
 def create_new_path_scaler(uuid):
     path = 'models/'+uuid+'_scaler.pkl'
-    return path
+    abs_path = os.path.join(current_app.root_path, path)
+    return abs_path
 
 
 def image_to_base64(path):
