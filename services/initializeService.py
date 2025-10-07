@@ -21,12 +21,12 @@ def generateUUID():
     return str(uuid_new)
 
 def create_new_path(uuid):
-    path = 'models/'+uuid+'.pkl'
+    path = 'tmp_models/'+uuid+'.pkl'
     abs_path = os.path.join(current_app.root_path, path)
     return abs_path
 
 def create_new_path_scaler(uuid):
-    path = 'models/'+uuid+'_scaler.pkl'
+    path = 'tmp_models/'+uuid+'_scaler.pkl'
     abs_path = os.path.join(current_app.root_path, path)
     return abs_path
 

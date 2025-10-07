@@ -208,6 +208,7 @@ __marimo__/
 
 # Ignores all temporal .pkl
 models/*.pkl
+tmp_models/*.pkl
 
 !models/KOI_scaler.pkl
 !models/KOI.pkl

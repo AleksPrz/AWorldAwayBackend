@@ -48,6 +48,7 @@ def export_model():
     if path_model is None:
         return jsonify({'message':"Archivo no encontrado"})
     filename = os.path.basename(path_model)
+    print(PathModels)
     return send_file(
         path_model,
         as_attachment = True,

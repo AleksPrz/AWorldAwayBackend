@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, current_app
 from routes import route_bp
 from flask_cors import CORS
 from flask_apscheduler import APScheduler
@@ -12,16 +12,17 @@ app.register_blueprint(route_bp)
 scheduler = APScheduler()
 
 def limpiar_carpeta_tmpModels():
-    ruta_carpeta = 'tmpModels'
-    if os.path.exists(ruta_carpeta):
+    
+    folder_path = os.path.join(current_app.root_path, 'tmp_models')
+    if os.path.exists(folder_path):
         try:
-            for nombre_archivo in os.listdir(ruta_carpeta):
-                ruta_archivo = os.path.join(ruta_carpeta, nombre_archivo)
-                if os.path.isfile(ruta_archivo):
-                    os.remove(ruta_archivo)
-                elif os.path.isdir(ruta_archivo):
-                    shutil.rmtree(ruta_archivo)  # Borra subcarpetas si hay
-            print(f"Éxito: File of '{ruta_carpeta}' deleted.")
+            for file in os.listdir(folder_path):
+                file_path = os.path.join(folder_path, file)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)  # Borra subcarpetas si hay
+            print(f"Success: File of '{folder_path}' deleted.")
         except Exception as e:
             print(f"Error: {e}")
 
