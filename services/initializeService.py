@@ -19,11 +19,11 @@ def generateUUID():
     return str(uuid_new)
 
 def create_new_path(uuid):
-    path = 'models/'+uuid+'.pkl'
+    path = 'tmpModels/'+uuid+'.pkl'
     return path
 
 def create_new_path_scaler(uuid):
-    path = 'models/'+uuid+'_scaler.pkl'
+    path = 'tmpModels/'+uuid+'_scaler.pkl'
     return path
 
 
