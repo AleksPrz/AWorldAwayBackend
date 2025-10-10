@@ -1,3 +1,5 @@
+from flask import current_app
+import os
 import base64
 import pandas as pd
 from PathModels import PathModels
@@ -19,11 +21,11 @@ def generateUUID():
     return str(uuid_new)
 
 def create_new_path(uuid):
-    path = 'tmpModels/'+uuid+'.pkl'
+    path = 'tmp_models/'+uuid+'.pkl'
     return path
 
 def create_new_path_scaler(uuid):
-    path = 'tmpModels/'+uuid+'_scaler.pkl'
+    path = 'tmp_models/'+uuid+'_scaler.pkl'
     return path
 
 
